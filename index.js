@@ -1,5 +1,8 @@
+
 // index.js
 // where your node app starts
+
+require('dotenv').config();
 
 // init project
 var express = require('express');
@@ -25,9 +28,35 @@ app.get("/api/hello", function (req, res) {
 });
 
 
-// All Test endpint...
+// All Exam endpint...
+app.get('/api', (req, res) => {
+  let date = new Date();
+
+  res.json({ 
+    "unix": date.getTime(),
+    "utc": date.toGMTString()
+  });
+});
+
+
+app.get('/api/:date', (req, res) => {
+  let param = req.params.date;
+  let date = !isNaN(param) 
+        ? new Date(Number(param)) 
+        : new Date(param);
+
+  if (date == 'Invalid Date') {
+    res.json({ error : "Invalid Date" });
+    return;
+  }
+
+  res.json({ 
+    "unix": date.getTime(),
+    "utc": date.toGMTString()
+    });
+});
 
 // listen for requests :)
 var listener = app.listen(process.env.PORT, function () {
-  console.log('Your app is listening on http://localhost:' + listener.address().port);
+  console.log('Your app is listening on http://localhost:' + listener.address().port); 
 });
